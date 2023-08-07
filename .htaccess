@@ -1,0 +1,30 @@
+# Disable directory browsing
+Options -Indexes
+
+# Protect the .htaccess file itself
+<Files .htaccess>
+  Order Allow,Deny
+  Deny from all
+</Files>
+
+# Protect against common PHP vulnerabilities
+php_flag display_errors off
+php_flag expose_php off
+
+# Block access to sensitive files
+<FilesMatch "(^\.|wp-config\.php|php\.ini|\..*\.bak)">
+  Order allow,deny
+  Deny from all
+</FilesMatch>
+
+# Block access to xmlrpc.php (common target for attacks)
+<Files xmlrpc.php>
+  Order Deny,Allow
+  Deny from all
+</Files>
+
+# Prevent hotlinking of images
+RewriteEngine on
+RewriteCond %{HTTP_REFERER} !^$
+RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?yourwebsite\.com [NC]
+RewriteRule \.(jpg|jpeg|png|gif)$ - [NC,F,L]
